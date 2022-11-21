@@ -7,6 +7,8 @@ from torch import nn
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision.transforms import ToTensor
+import time
+
 
 class NeuralNetwork(nn.Module):
     def __init__(self):
@@ -47,7 +49,7 @@ def train_loop(dataloader, model, loss_fn, optimizer):
         if batch % 100 == 0:
             loss, current = loss.cpu().item(), batch * len(X)
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
-
+    return model, optimizer
 
 def test_loop(dataloader, model, loss_fn):
     size = len(dataloader.dataset)
@@ -84,7 +86,8 @@ train_dataloader = DataLoader(training_data, batch_size=64)
 test_dataloader = DataLoader(test_data, batch_size=64)
 print(test_dataloader)
 
-device = "cuda:2" if torch.cuda.is_available() else "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
+#device='cpu'
 print(f"Using {device} device")
 
 print('themodel')
@@ -100,10 +103,12 @@ batch_size = 64
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
+start = time.time()
 epochs = 5
 for t in range(epochs):
     print(f"Epoch {t+1}\n-------------------------------")
     train_loop(train_dataloader, model, loss_fn, optimizer)
     test_loop(test_dataloader, model, loss_fn)
+    print(f"{time.time()-start} elapsed")
 print("Done!")
 

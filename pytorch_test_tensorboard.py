@@ -86,7 +86,7 @@ train_dataloader = DataLoader(training_data, batch_size=64)
 test_dataloader = DataLoader(test_data, batch_size=64)
 print(test_dataloader)
 
-device = "cuda:2" if torch.cuda.is_available() else "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using {device} device")
 
 print('themodel')
